@@ -1,4 +1,4 @@
-package com.epam.bogacheva.song_service.model.dto;
+package com.epam.bogacheva.song_service.validation;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

@@ -1,9 +1,9 @@
-package com.epam.bogacheva.song_service.model.dto;
+package com.epam.bogacheva.song_service.validation;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-public class DurationValidation implements ConstraintValidator<ValidDuration, String> {
+public class DurationValidator implements ConstraintValidator<ValidDuration, String> {
 
     private static final String SEPARATOR = ":";
     private static final int PART_LENGTH = 2;

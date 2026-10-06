@@ -1,4 +1,4 @@
-package com.epam.bogacheva.song_service.model.dto;
+package com.epam.bogacheva.song_service.validation;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
@@ -10,10 +10,10 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.RECORD_COMPONENT})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = DurationValidation.class)
-public @interface ValidDuration {
+@Constraint(validatedBy = YearValidator.class)
+public @interface ValidYear {
 
-    String message() default "Duration must be in mm:ss format with leading zeros";
+    String message() default "Year must be between 1900 and 2099";
 
     Class<?>[] groups() default {};
 

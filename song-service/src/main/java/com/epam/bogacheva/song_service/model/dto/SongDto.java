@@ -1,5 +1,7 @@
 package com.epam.bogacheva.song_service.model.dto;
 
+import com.epam.bogacheva.song_service.validation.ValidDuration;
+import com.epam.bogacheva.song_service.validation.ValidYear;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
