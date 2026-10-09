@@ -6,6 +6,7 @@ import jakarta.validation.ConstraintValidatorContext;
 public class DurationValidator implements ConstraintValidator<ValidDuration, String> {
 
     private static final String SEPARATOR = ":";
+    private static final int PARTS_COUNT = 2;
     private static final int PART_LENGTH = 2;
     private static final int MAX_SECONDS = 59;
 
@@ -15,7 +16,7 @@ public class DurationValidator implements ConstraintValidator<ValidDuration, Str
             return true;
         }
         String[] parts = value.split(SEPARATOR, -1);
-        if (parts.length != 2 || !isTwoDigits(parts[0]) || !isTwoDigits(parts[1])) {
+        if (parts.length != PARTS_COUNT || !isTwoDigits(parts[0]) || !isTwoDigits(parts[1])) {
             return false;
         }
         int seconds = Integer.parseInt(parts[1]);

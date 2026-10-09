@@ -20,6 +20,8 @@ import java.util.Optional;
 @Component
 public class Mp3MetadataExtractor {
 
+    private static final int SECONDS_PER_MINUTE = 60;
+
     public SongDto extract(byte[] data) {
         Metadata metadata = parse(data);
         String duration = Optional.ofNullable(metadata.get(XMPDM.DURATION))
@@ -47,6 +49,6 @@ public class Mp3MetadataExtractor {
 
     private String formatDuration(String seconds) {
         long totalSeconds = Math.round(Double.parseDouble(seconds));
-        return "%02d:%02d".formatted(totalSeconds / 60, totalSeconds % 60);
+        return "%02d:%02d".formatted(totalSeconds / SECONDS_PER_MINUTE, totalSeconds % SECONDS_PER_MINUTE);
     }
 }

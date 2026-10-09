@@ -41,8 +41,7 @@ public class GlobalExceptionHandler {
                         FieldError::getField,
                         FieldError::getDefaultMessage,
                         (first, second) -> first));
-        ValidationErrorDto body = new ValidationErrorDto("Validation error", details,
-                String.valueOf(HttpStatus.BAD_REQUEST.value()));
+        ValidationErrorDto body = new ValidationErrorDto("Validation error", details, errorCode(HttpStatus.BAD_REQUEST));
         return ResponseEntity.badRequest().body(body);
     }
 
@@ -64,6 +63,10 @@ public class GlobalExceptionHandler {
     }
 
     private ResponseEntity<ErrorDto> buildError(HttpStatus status, String message) {
-        return ResponseEntity.status(status).body(new ErrorDto(message, String.valueOf(status.value())));
+        return ResponseEntity.status(status).body(new ErrorDto(message, errorCode(status)));
+    }
+
+    private String errorCode(HttpStatus status) {
+        return String.valueOf(status.value());
     }
 }
