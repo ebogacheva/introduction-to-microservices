@@ -28,19 +28,22 @@ public class SongServiceClient {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(song)
                 .retrieve()
-                .onStatus(status -> status.isSameCodeAs(HttpStatus.BAD_REQUEST), (request, response) -> {
+                .onStatus(HttpStatus.BAD_REQUEST::isSameCodeAs, (request, response) -> {
                     throw new InvalidSongMetadataException();
                 })
                 .toBodilessEntity();
     }
 
     public void deleteSongs(List<Long> ids) {
-        String csvIds = ids.stream()
-                .map(String::valueOf)
-                .collect(Collectors.joining(","));
         restClient.delete()
-                .uri(uriBuilder -> uriBuilder.path(SONGS_PATH).queryParam("id", csvIds).build())
+                .uri(uriBuilder -> uriBuilder.path(SONGS_PATH).queryParam("id", toCsv(ids)).build())
                 .retrieve()
                 .toBodilessEntity();
+    }
+
+    private String toCsv(List<Long> ids) {
+        return ids.stream()
+                .map(String::valueOf)
+                .collect(Collectors.joining(","));
     }
 }

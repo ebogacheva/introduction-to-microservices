@@ -37,11 +37,15 @@ public class SongService {
 
     @Transactional
     public List<Long> deleteByIds(String csv) {
-        List<Long> existingIds = idParser.parseCsvIds(csv).stream()
+        List<Long> existingIds = findExistingIds(csv);
+        songRepository.deleteAllById(existingIds);
+        return existingIds;
+    }
+
+    private List<Long> findExistingIds(String csv) {
+        return idParser.parseCsvIds(csv).stream()
                 .distinct()
                 .filter(songRepository::existsById)
                 .toList();
-        songRepository.deleteAllById(existingIds);
-        return existingIds;
     }
 }

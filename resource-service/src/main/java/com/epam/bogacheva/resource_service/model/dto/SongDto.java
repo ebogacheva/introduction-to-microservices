@@ -8,4 +8,8 @@ public record SongDto(
         String duration,
         String year
 ) {
+
+    public SongDto withId(Long id) {
+        return new SongDto(id, name, artist, album, duration, year);
+    }
 }

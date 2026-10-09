@@ -24,15 +24,12 @@ public class Mp3MetadataExtractor {
 
     public SongDto extract(byte[] data) {
         Metadata metadata = parse(data);
-        String duration = Optional.ofNullable(metadata.get(XMPDM.DURATION))
-                .map(this::formatDuration)
-                .orElseThrow(InvalidMp3Exception::new);
         return new SongDto(
                 null,
                 metadata.get(TikaCoreProperties.TITLE),
                 metadata.get(XMPDM.ARTIST),
                 metadata.get(XMPDM.ALBUM),
-                duration,
+                extractDuration(metadata),
                 metadata.get(XMPDM.RELEASE_DATE)
         );
     }
@@ -45,6 +42,12 @@ public class Mp3MetadataExtractor {
             throw new InvalidMp3Exception();
         }
         return metadata;
+    }
+
+    private String extractDuration(Metadata metadata) {
+        return Optional.ofNullable(metadata.get(XMPDM.DURATION))
+                .map(this::formatDuration)
+                .orElseThrow(InvalidMp3Exception::new);
     }
 
     private String formatDuration(String seconds) {

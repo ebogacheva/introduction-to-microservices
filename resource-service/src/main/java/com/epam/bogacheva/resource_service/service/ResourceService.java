@@ -22,10 +22,9 @@ public class ResourceService {
 
     @Transactional
     public Long upload(byte[] data) {
-        SongDto tags = mp3MetadataExtractor.extract(data);
+        SongDto songMetadata = mp3MetadataExtractor.extract(data);
         Long id = resourceRepository.save(new Resource(null, data)).getId();
-        songServiceClient.createSong(
-                new SongDto(id, tags.name(), tags.artist(), tags.album(), tags.duration(), tags.year()));
+        songServiceClient.createSong(songMetadata.withId(id));
         return id;
     }
 
@@ -39,14 +38,19 @@ public class ResourceService {
 
     @Transactional
     public List<Long> deleteByIds(String csv) {
-        List<Long> existingIds = idParser.parseCsvIds(csv).stream()
+        List<Long> existingIds = findExistingIds(csv);
+        if (existingIds.isEmpty()) {
+            return existingIds;
+        }
+        resourceRepository.deleteAllById(existingIds);
+        songServiceClient.deleteSongs(existingIds);
+        return existingIds;
+    }
+
+    private List<Long> findExistingIds(String csv) {
+        return idParser.parseCsvIds(csv).stream()
                 .distinct()
                 .filter(resourceRepository::existsById)
                 .toList();
-        resourceRepository.deleteAllById(existingIds);
-        if (!existingIds.isEmpty()) {
-            songServiceClient.deleteSongs(existingIds);
-        }
-        return existingIds;
     }
 }
