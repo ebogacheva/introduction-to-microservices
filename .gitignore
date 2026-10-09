@@ -1,6 +1,8 @@
 target/
 .idea/
 *.iml
+.vscode/
+.settings/
 
 # Local AI files
 CLAUDE.md
