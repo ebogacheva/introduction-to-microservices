@@ -29,8 +29,10 @@ import static org.mockito.Mockito.when;
 class ResourceServiceTest {
 
     private static final byte[] DATA = {1, 2, 3};
-    private static final SongDto TAGS = new SongDto(null, "Test Title", "Test Artist", "Test Album", "00:08", "2025");
-    private static final SongDto SONG_WITH_ID = new SongDto(1L, "Test Title", "Test Artist", "Test Album", "00:08", "2025");
+    private static final SongDto TAGS =
+            new SongDto(null, "Test Title", "Test Artist", "Test Album", "00:08", "2025");
+    private static final SongDto SONG_WITH_ID =
+            new SongDto(1L, "Test Title", "Test Artist", "Test Album", "00:08", "2025");
 
     @Mock
     private ResourceRepository resourceRepository;
@@ -45,7 +47,8 @@ class ResourceServiceTest {
 
     @BeforeEach
     void setUp() {
-        resourceService = new ResourceService(resourceRepository, mp3MetadataExtractor, songServiceClient, new IdParser());
+        resourceService = new ResourceService(
+                resourceRepository, mp3MetadataExtractor, songServiceClient, new IdParser());
     }
 
     @Test

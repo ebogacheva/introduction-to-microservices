@@ -27,8 +27,10 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class SongServiceTest {
 
-    private static final SongDto DTO = new SongDto(1L, "We are the champions", "Queen", "News of the world", "02:59", "1977");
-    private static final Song SONG = new Song(1L, "We are the champions", "Queen", "News of the world", "02:59", "1977");
+    private static final SongDto DTO =
+            new SongDto(1L, "We are the champions", "Queen", "News of the world", "02:59", "1977");
+    private static final Song SONG =
+            new Song(1L, "We are the champions", "Queen", "News of the world", "02:59", "1977");
 
     @Mock
     private SongRepository songRepository;

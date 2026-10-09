@@ -41,7 +41,8 @@ public class GlobalExceptionHandler {
                         FieldError::getField,
                         FieldError::getDefaultMessage,
                         (first, second) -> first));
-        ValidationErrorDto body = new ValidationErrorDto("Validation error", details, errorCode(HttpStatus.BAD_REQUEST));
+        ValidationErrorDto body = new ValidationErrorDto(
+                "Validation error", details, errorCode(HttpStatus.BAD_REQUEST));
         return ResponseEntity.badRequest().body(body);
     }
 

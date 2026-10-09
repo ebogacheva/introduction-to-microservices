@@ -25,7 +25,8 @@ import static org.mockito.Mockito.when;
 @WebMvcTest(SongController.class)
 class SongControllerTest {
 
-    private static final SongDto DTO = new SongDto(1L, "We are the champions", "Queen", "News of the world", "02:59", "1977");
+    private static final SongDto DTO =
+            new SongDto(1L, "We are the champions", "Queen", "News of the world", "02:59", "1977");
     private static final String DTO_JSON = """
             {"id": 1, "name": "We are the champions", "artist": "Queen",
              "album": "News of the world", "duration": "02:59", "year": "1977"}""";
@@ -113,7 +114,8 @@ class SongControllerTest {
                 .hasStatus(400)
                 .hasHeader(HttpHeaders.CONTENT_TYPE, "application/json")
                 .bodyJson().isStrictlyEqualTo("""
-                        {"errorMessage": "Invalid value 'ABC' for ID. Must be a positive integer", "errorCode": "400"}""");
+                        {"errorMessage": "Invalid value 'ABC' for ID. Must be a positive integer",
+                         "errorCode": "400"}""");
     }
 
     @Test
