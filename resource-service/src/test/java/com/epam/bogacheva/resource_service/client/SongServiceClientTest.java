@@ -23,6 +23,7 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 @RestClientTest(components = SongServiceClient.class, properties = "song-service.url=http://song-service")
 class SongServiceClientTest {
 
+    private static final String SONGS_URL = "http://song-service/songs";
     private static final SongDto SONG = new SongDto(1L, "Test Title", "Test Artist", "Test Album", "00:08", "2025");
 
     @Autowired
@@ -33,7 +34,7 @@ class SongServiceClientTest {
 
     @Test
     void createSongPostsJson() {
-        server.expect(requestTo("http://song-service/songs"))
+        server.expect(requestTo(SONGS_URL))
                 .andExpect(method(HttpMethod.POST))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json("""
@@ -49,7 +50,7 @@ class SongServiceClientTest {
 
     @Test
     void createSongBadRequest() {
-        server.expect(requestTo("http://song-service/songs"))
+        server.expect(requestTo(SONGS_URL))
                 .andRespond(withBadRequest());
 
         assertThatThrownBy(() -> client.createSong(SONG))
@@ -59,7 +60,7 @@ class SongServiceClientTest {
 
     @Test
     void createSongServerError() {
-        server.expect(requestTo("http://song-service/songs"))
+        server.expect(requestTo(SONGS_URL))
                 .andRespond(withServerError());
 
         assertThatThrownBy(() -> client.createSong(SONG))
@@ -68,7 +69,7 @@ class SongServiceClientTest {
 
     @Test
     void deleteSongsSendsCsv() {
-        server.expect(requestTo("http://song-service/songs?id=1,2"))
+        server.expect(requestTo(SONGS_URL + "?id=1,2"))
                 .andExpect(method(HttpMethod.DELETE))
                 .andRespond(withSuccess("{\"ids\": [1, 2]}", MediaType.APPLICATION_JSON));
 

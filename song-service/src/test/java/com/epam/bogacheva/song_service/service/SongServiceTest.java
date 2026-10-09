@@ -21,6 +21,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -77,6 +78,7 @@ class SongServiceTest {
     void getByIdThrowsOnInvalidId() {
         assertThatThrownBy(() -> songService.getById("ABC"))
                 .isInstanceOf(InvalidIdException.class);
+        verifyNoInteractions(songRepository);
     }
 
     @Test

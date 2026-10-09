@@ -30,7 +30,7 @@ class Mp3MetadataExtractorTest {
     }
 
     @Test
-    void extractNotMp3() {
+    void extractThrowsOnNonMp3Data() {
         byte[] data = "not an mp3".getBytes();
 
         assertThatThrownBy(() -> extractor.extract(data))

@@ -30,6 +30,7 @@ class ResourceServiceTest {
 
     private static final byte[] DATA = {1, 2, 3};
     private static final SongDto TAGS = new SongDto(null, "Test Title", "Test Artist", "Test Album", "00:08", "2025");
+    private static final SongDto SONG_WITH_ID = new SongDto(1L, "Test Title", "Test Artist", "Test Album", "00:08", "2025");
 
     @Mock
     private ResourceRepository resourceRepository;
@@ -53,8 +54,7 @@ class ResourceServiceTest {
         when(resourceRepository.save(any(Resource.class))).thenReturn(new Resource(1L, DATA));
 
         assertThat(resourceService.upload(DATA)).isEqualTo(1L);
-        verify(songServiceClient).createSong(
-                new SongDto(1L, "Test Title", "Test Artist", "Test Album", "00:08", "2025"));
+        verify(songServiceClient).createSong(SONG_WITH_ID);
     }
 
     @Test

@@ -11,7 +11,7 @@ class SongMapperTest {
     private final SongMapper mapper = new SongMapper();
 
     @Test
-    void toEntity() {
+    void toEntityCopiesAllFields() {
         SongDto dto = new SongDto(1L, "We are the champions", "Queen", "News of the world", "02:59", "1977");
 
         Song song = mapper.toEntity(dto);
@@ -20,7 +20,7 @@ class SongMapperTest {
     }
 
     @Test
-    void toDto() {
+    void toDtoCopiesAllFields() {
         Song song = new Song(1L, "We are the champions", "Queen", "News of the world", "02:59", "1977");
 
         assertThat(mapper.toDto(song))

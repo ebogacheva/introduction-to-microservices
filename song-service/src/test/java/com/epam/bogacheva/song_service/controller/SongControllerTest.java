@@ -1,5 +1,6 @@
 package com.epam.bogacheva.song_service.controller;
 
+import com.epam.bogacheva.song_service.exception.InvalidCsvIdException;
 import com.epam.bogacheva.song_service.exception.InvalidIdException;
 import com.epam.bogacheva.song_service.exception.SongAlreadyExistsException;
 import com.epam.bogacheva.song_service.exception.SongNotFoundException;
@@ -67,6 +68,7 @@ class SongControllerTest {
     void createReturnsBadRequestOnMalformedBody() {
         assertThat(mvc.post().uri("/songs").contentType(MediaType.APPLICATION_JSON).content("{"))
                 .hasStatus(400)
+                .hasHeader(HttpHeaders.CONTENT_TYPE, "application/json")
                 .bodyJson().isStrictlyEqualTo("""
                         {"errorMessage": "Request body is missing or malformed", "errorCode": "400"}""");
     }
@@ -77,6 +79,7 @@ class SongControllerTest {
 
         assertThat(mvc.post().uri("/songs").contentType(MediaType.APPLICATION_JSON).content(DTO_JSON))
                 .hasStatus(409)
+                .hasHeader(HttpHeaders.CONTENT_TYPE, "application/json")
                 .bodyJson().isStrictlyEqualTo("""
                         {"errorMessage": "Metadata for resource ID=1 already exists", "errorCode": "409"}""");
     }
@@ -108,16 +111,18 @@ class SongControllerTest {
 
         assertThat(mvc.get().uri("/songs/ABC"))
                 .hasStatus(400)
+                .hasHeader(HttpHeaders.CONTENT_TYPE, "application/json")
                 .bodyJson().isStrictlyEqualTo("""
                         {"errorMessage": "Invalid value 'ABC' for ID. Must be a positive integer", "errorCode": "400"}""");
     }
 
     @Test
-    void getByIdHidesUnexpectedErrorText() {
+    void unexpectedErrorReturnsInternalServerError() {
         when(songService.getById("1")).thenThrow(new IllegalStateException("connection to song-db refused"));
 
         assertThat(mvc.get().uri("/songs/1"))
                 .hasStatus(500)
+                .hasHeader(HttpHeaders.CONTENT_TYPE, "application/json")
                 .bodyJson().isStrictlyEqualTo("""
                         {"errorMessage": "An internal server error has occurred", "errorCode": "500"}""");
     }
@@ -134,9 +139,22 @@ class SongControllerTest {
     }
 
     @Test
+    void deleteReturnsBadRequestOnInvalidCsv() {
+        when(songService.deleteByIds("1,V")).thenThrow(new InvalidCsvIdException("V"));
+
+        assertThat(mvc.delete().uri("/songs").param("id", "1,V"))
+                .hasStatus(400)
+                .hasHeader(HttpHeaders.CONTENT_TYPE, "application/json")
+                .bodyJson().isStrictlyEqualTo("""
+                        {"errorMessage": "Invalid ID format: 'V'. Only positive integers are allowed",
+                         "errorCode": "400"}""");
+    }
+
+    @Test
     void deleteReturnsBadRequestWhenIdParameterIsMissing() {
         assertThat(mvc.delete().uri("/songs"))
                 .hasStatus(400)
+                .hasHeader(HttpHeaders.CONTENT_TYPE, "application/json")
                 .bodyJson().isStrictlyEqualTo("""
                         {"errorMessage": "Required parameter 'id' is missing", "errorCode": "400"}""");
     }

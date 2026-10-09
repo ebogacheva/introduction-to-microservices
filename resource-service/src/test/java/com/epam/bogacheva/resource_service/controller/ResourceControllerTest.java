@@ -60,6 +60,7 @@ class ResourceControllerTest {
     void uploadRejectsEmptyBody() {
         assertThat(mvc.post().uri("/resources").contentType(AUDIO_MPEG))
                 .hasStatus(400)
+                .hasHeader(HttpHeaders.CONTENT_TYPE, "application/json")
                 .bodyJson().isStrictlyEqualTo("""
                         {"errorMessage": "Request body is missing or malformed", "errorCode": "400"}""");
         verify(resourceService, never()).upload(any());
@@ -71,6 +72,7 @@ class ResourceControllerTest {
 
         assertThat(mvc.post().uri("/resources").contentType(AUDIO_MPEG).content(DATA))
                 .hasStatus(400)
+                .hasHeader(HttpHeaders.CONTENT_TYPE, "application/json")
                 .bodyJson().isStrictlyEqualTo("""
                         {"errorMessage": "Invalid MP3 file", "errorCode": "400"}""");
     }
@@ -81,6 +83,7 @@ class ResourceControllerTest {
 
         assertThat(mvc.post().uri("/resources").contentType(AUDIO_MPEG).content(DATA))
                 .hasStatus(400)
+                .hasHeader(HttpHeaders.CONTENT_TYPE, "application/json")
                 .bodyJson().isStrictlyEqualTo("""
                         {"errorMessage": "MP3 file has invalid or missing tags", "errorCode": "400"}""");
     }
@@ -136,15 +139,17 @@ class ResourceControllerTest {
 
         assertThat(mvc.delete().uri("/resources").param("id", "1,V"))
                 .hasStatus(400)
+                .hasHeader(HttpHeaders.CONTENT_TYPE, "application/json")
                 .bodyJson().isStrictlyEqualTo("""
                         {"errorMessage": "Invalid ID format: 'V'. Only positive integers are allowed",
                          "errorCode": "400"}""");
     }
 
     @Test
-    void deleteReturnsBadRequestWhenIdParamMissing() {
+    void deleteReturnsBadRequestWhenIdParameterIsMissing() {
         assertThat(mvc.delete().uri("/resources"))
                 .hasStatus(400)
+                .hasHeader(HttpHeaders.CONTENT_TYPE, "application/json")
                 .bodyJson().isStrictlyEqualTo("""
                         {"errorMessage": "Required parameter 'id' is missing", "errorCode": "400"}""");
     }
