@@ -4,15 +4,18 @@ import com.epam.bogacheva.song_service.model.dto.ErrorDto;
 import com.epam.bogacheva.song_service.model.dto.ValidationErrorDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -49,6 +52,15 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorDto> handleNotReadable(HttpMessageNotReadableException ex) {
         return buildError(HttpStatus.BAD_REQUEST, "Request body is missing or malformed");
+    }
+
+    @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+    public ResponseEntity<ErrorDto> handleMediaTypeNotSupported(HttpMediaTypeNotSupportedException ex) {
+        String contentType = Optional.ofNullable(ex.getContentType())
+                .map(MediaType::toString)
+                .orElse("unknown");
+        return buildError(HttpStatus.BAD_REQUEST,
+                "Invalid content type: %s. Only application/json is allowed".formatted(contentType));
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)

@@ -75,6 +75,18 @@ class SongControllerTest {
     }
 
     @Test
+    void createReturnsBadRequestOnUnsupportedContentType() {
+        assertThat(mvc.post().uri("/songs").contentType(MediaType.TEXT_PLAIN).content(DTO_JSON))
+                .hasStatus(400)
+                .hasHeader(HttpHeaders.CONTENT_TYPE, "application/json")
+                .bodyJson().isStrictlyEqualTo("""
+                        {"errorMessage":
+                             "Invalid content type: text/plain;charset=UTF-8. Only application/json is allowed",
+                         "errorCode": "400"}""");
+        verify(songService, never()).create(any());
+    }
+
+    @Test
     void createReturnsConflictWhenSongExists() {
         when(songService.create(DTO)).thenThrow(new SongAlreadyExistsException(1L));
 
